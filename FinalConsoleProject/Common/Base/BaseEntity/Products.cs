@@ -14,22 +14,20 @@ namespace FinalConsoleProject.Common.Base.BaseEntity
   - say
   - kodu  var
     */
-    public class Products
+    public class Products : BaseId
     {
-        public Products(string name, decimal price, Categories category, ProductID productID)
+        private static int count;
+        public Products()
         {
-            Name = name;
-            Price = price;
-            Categories categories = category;
-            ProductID count = productID;
-
+            Id = count;
+            count++;
         }
 
         public string Name { get; set; }
 
+        public int Number { get; set; }
         public decimal Price { get; set; }
         public Categories Categories { get; set; }
-        public ProductID Id { get; set; }
 
 
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinalConsoleProject.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FinalConsoleProject.SubMenu
 {
-    public class ProductSubMenuHelper
+    public class ProductSubMenuHelper : MarketService
     {
         public static void ProductSubMenu()
         {
@@ -37,7 +38,7 @@ namespace FinalConsoleProject.SubMenu
                 switch (option)
                 {
                     case 1:
-                        Console.WriteLine("Added employee");
+                        MenuService.AddNewProduct();
                         break;
                     case 2:
                         Console.WriteLine("Deleted employee");

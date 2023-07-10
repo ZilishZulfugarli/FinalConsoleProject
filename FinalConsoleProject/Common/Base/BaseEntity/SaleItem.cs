@@ -1,5 +1,6 @@
 ﻿using FinalConsoleProject.Common.Base.BaseID;
 using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,17 +8,17 @@ using System.Threading.Tasks;
 
 namespace FinalConsoleProject.Common.Base.BaseEntity
 {
-    public class SaleItem
+    public class SaleItem : BaseId
     {
-
-        public SaleItem(SaleItemID id, Products products, int count)
+        private static int count;
+        public SaleItem() 
         {
-            SaleItemID Id = id;
-            Products Products = products;
-            Count = count;
-
+            Id = count;
+            count++;
         }
-        public SaleItemID Id { get; set; }
+
+        private decimal EndPrice = 0;
+        
 
         public Products Products { get; set; }
 

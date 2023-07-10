@@ -6,15 +6,8 @@ using System.Threading.Tasks;
 
 namespace FinalConsoleProject.Common.Base.BaseID
 {
-    public class ProductID
+    public abstract class BaseId
     {
-
-        public ProductID(int id) 
-        {
-            ID = count;
-            count++;
-        }
-        private int count = 0;
-        public int ID = 0;
+        public int Id { get; set; }
     }
 }

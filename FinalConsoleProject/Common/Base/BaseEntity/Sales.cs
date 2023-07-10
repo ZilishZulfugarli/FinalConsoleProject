@@ -8,24 +8,27 @@ using System.Threading.Tasks;
 
 namespace FinalConsoleProject.Common.Base.BaseEntity
 {
-    internal class Sales
+    internal class Sales : BaseId
     {
-        public Sales(string name, int amount, SaleID saleID, DateTime time, List<SaleItem> saleitem)
+        private static int count;
+
+        public Sales()
         {
-            Name = name;
-            Amount = amount;
-           
-            
+            Id = count;
+            count++;
         }
-        public string Name { get; set; }
+
+
+
+
 
         public int Amount { get; set; }
-        
-        public SaleID Id { get; set; }  
+
 
         public DateTime Date { get; set; }
 
         public List<SaleItem> SaleItems { get; set; }
-        
+
+
     }
 }
