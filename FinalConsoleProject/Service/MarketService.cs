@@ -1,4 +1,5 @@
-﻿using FinalConsoleProject.Common.Base.BaseEntity;
+﻿using ConsoleTables;
+using FinalConsoleProject.Common.Base.BaseEntity;
 using FinalConsoleProject.Common.Base.BaseID;
 using FinalConsoleProject.Common.Enum;
 using System;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FinalConsoleProject.Service
 {
-    public class MarketService
+    public class MarketService : Products
     {
         public List<Products> Product;
 
@@ -21,7 +22,7 @@ namespace FinalConsoleProject.Service
             Product = new List<Products>();
         }
 
-      
+
         public int AddProduct(string name, decimal price, int number, string category)
         {
             if (string.IsNullOrEmpty(name))
@@ -83,6 +84,76 @@ namespace FinalConsoleProject.Service
         public List<Products> ShowAllProducts()
         {
             return Product;
+
+        }
+
+        public void ShowProductsByCategory(string category)
+        {
+            foreach (var item in Enum.GetValues(typeof(Categories)))
+            {
+                var find = Product.Find(item => item.Categories.ToString().ToLower().Equals(category.ToLower()));
+
+                
+
+
+                if (find == null)
+                {
+                    throw new Exception("Category is empty");
+                }
+                var table = new ConsoleTable("Product Name", "Product Price", "Product Categories", "Product Number", "Product Id");
+                table.AddRow(find.Name, find.Price, find.Categories, find.Number, find.Id);
+                table.Write();
+
+                break;
+            }
+
+        }
+
+        public void FindByPriceRange(decimal startprice, decimal endprice)
+        {
+            if (startprice < 0)
+            {
+                throw new Exception("Please enter price 0-9999999");
+
+            }
+
+            if (endprice < 0)
+            {
+                throw new Exception("Please enter price 0-9999999");
+            }
+
+            if (startprice > endprice)
+            {
+                throw new Exception("Starting price must less than ending price");
+            }
+
+            var pro = Product.Where(x => x.Price >= startprice && x.Price <= endprice).ToList();
+
+
+            var table = new ConsoleTable("Product Name", "Product Price", "Product Categories", "Product Number", "Product Id");
+
+
+            foreach (var product in pro)
+            {
+                table.AddRow(product.Name, product.Price, product.Categories, product.Number, product.Id);
+            }
+
+            table.Write();
+        }
+
+        public void FindProductByName(string name)
+        {
+            var pro = Product.FindAll(x => x.Name.Trim().ToLower() == name).ToList();
+
+            var table = new ConsoleTable("Product Name", "Product Price", "Product Categories", "Product Number", "Product Id");
+
+
+            foreach (var product in pro)
+            {
+                table.AddRow(product.Name, product.Price, product.Categories, product.Number, product.Id);
+            }
+
+            table.Write();
 
         }
     }

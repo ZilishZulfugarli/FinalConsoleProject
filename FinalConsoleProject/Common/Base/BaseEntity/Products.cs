@@ -30,5 +30,6 @@ namespace FinalConsoleProject.Common.Base.BaseEntity
         public Categories Categories { get; set; }
 
 
+
     }
 }

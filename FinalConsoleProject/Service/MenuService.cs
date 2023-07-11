@@ -10,7 +10,7 @@ using ConsoleTables;
 
 namespace FinalConsoleProject.Service
 {
-    public class MenuService 
+    public class MenuService
     {
         private static MarketService marketService = new();
 
@@ -19,10 +19,10 @@ namespace FinalConsoleProject.Service
             try
             {
                 Console.WriteLine("Enter product's name:");
-                string name = Console.ReadLine();
+                string name = Console.ReadLine().Trim();
 
                 Console.WriteLine("Enter products's price:");
-                decimal price = Convert.ToDecimal(Console.ReadLine());
+                decimal price = Convert.ToDecimal(Console.ReadLine().Trim());
 
                 Console.WriteLine("Enter product's category:");
 
@@ -35,42 +35,42 @@ namespace FinalConsoleProject.Service
 
                 Console.WriteLine("------------------------------------------------------");
 
-                string category = Console.ReadLine();
+                string category = Console.ReadLine().Trim();
 
                 Console.WriteLine("Enter product's stock number:");
-                int number = Convert.ToInt32(Console.ReadLine());
+                int number = Convert.ToInt32(Console.ReadLine().Trim());
 
                 int productId = marketService.AddProduct(name, price, number, category);
 
                 Console.WriteLine($"Added {name} with ID: {productId}");
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Console.WriteLine("Oops! Hava some problems!");
                 Console.WriteLine(ex.Message);
             }
 
-            
 
-           
+
+
         }
-        public static void UptadeProduct() 
+        public static void UptadeProduct()
         {
             try
             {
                 Console.WriteLine("Enter product ID:");
-                int Id = Convert.ToInt32(Console.ReadLine());
+                int Id = Convert.ToInt32(Console.ReadLine().Trim());
 
                 Console.WriteLine("Enter product name:");
-                string name = Console.ReadLine() ;
+                string name = Console.ReadLine().Trim();
 
                 Console.WriteLine("Enter product price:");
-                decimal price = Convert.ToDecimal(Console.ReadLine()) ;
+                decimal price = Convert.ToDecimal(Console.ReadLine().Trim());
 
                 Console.WriteLine("Enter product number:");
-                int number = Convert.ToInt32(Console.ReadLine()) ;
+                int number = Convert.ToInt32(Console.ReadLine().Trim());
 
-               
+
                 marketService.UptadeProduct(Id, name, price, number);
 
                 Console.WriteLine($"Successfully product uptaded by ID: {Id}");
@@ -78,8 +78,8 @@ namespace FinalConsoleProject.Service
 
             }
             catch (Exception ex)
-            { 
-             throw new Exception("Have some problems!");
+            {
+                Console.WriteLine("Have some problems!");
                 Console.WriteLine(ex.Message);
             }
         }
@@ -88,7 +88,7 @@ namespace FinalConsoleProject.Service
             try
             {
                 Console.WriteLine("Enter product ID:");
-                int ProductId = Convert.ToInt32(Console.ReadLine());
+                int ProductId = Convert.ToInt32(Console.ReadLine().Trim());
 
                 marketService.DeleteProduct(ProductId);
 
@@ -101,37 +101,82 @@ namespace FinalConsoleProject.Service
                 Console.WriteLine(ex.Message);
             }
         }
-            public static void ShowProduct()
+        public static void ShowProduct()
+        {
+            try
             {
-                try
+                var products = marketService.ShowAllProducts();
+
+                var table = new ConsoleTable("Product Name", "Product Price", "Product Categories", "Product Number", "Product Id");
+
+                if (products.Count == 0)
                 {
-                    var products = marketService.ShowAllProducts();
-
-                    var table = new ConsoleTable("Product Name", "Product Price", "Product Categories", "Product Number", "Product Id");
-
-                    if (products.Count == 0)
-                    {
-                        Console.WriteLine("No products yet");
-                        return;
-                    }
-
-                    foreach (var product in products)
-                    {
-                        table.AddRow(product.Name, product.Price, product.Categories, product.Number, product.Id);
-                    }
-
-                table.Write();
-            }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Oops! Got an error!");
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("No products yet");
+                    return;
                 }
 
-            
+                foreach (var product in products)
+                {
+                    table.AddRow(product.Name, product.Price, product.Categories, product.Number, product.Id);
+                }
+
+                table.Write();
+
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine("Oops! Got an error!");
+                Console.WriteLine(ex.Message);
+            }
+
+
+        }
+
+        public static void FindByCategory()
+        {
+            try
+            {
+                Console.WriteLine("Enter category:");
+                string category = Console.ReadLine().Trim();
+
+                marketService.ShowProductsByCategory(category);
+
+
+
+                
+
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("There is not category you write");
+                Console.WriteLine(ex.Message);
             }
         }
+
+        public static void MenuFindByPriceRange()
+        {
+            Console.WriteLine("Enter starting price:");
+            int startprice = Convert.ToInt32(Console.ReadLine().Trim());
+
+            Console.WriteLine("Enter ending price:");
+            int endprice = Convert.ToInt32(Console.ReadLine().Trim());
+
+            marketService.FindByPriceRange(startprice, endprice);
+
+        }
+
+
+        public static void MenuFindByName()
+        {
+            Console.WriteLine("Enter product name:");
+            string name = Console.ReadLine().Trim();
+
+            marketService.FindProductByName(name);
+        }
     }
+}
 
 
-    
+

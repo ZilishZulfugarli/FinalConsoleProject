@@ -1,11 +1,10 @@
-﻿using FinalConsoleProject.Common.Base.BaseEntity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FinalConsoleProject.Common.IMarketable
+namespace FinalConsoleProject.Abstract
 {
     public interface IMarketable
     {
@@ -24,7 +23,7 @@ namespace FinalConsoleProject.Common.IMarketable
         public void ShowProductsByPriceRange();
         public void ShowProductsByName();
 
-        
+
 
 
     }

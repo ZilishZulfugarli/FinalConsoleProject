@@ -51,6 +51,16 @@ namespace FinalConsoleProject.SubMenu
                     case 4:
                         MenuService.ShowProduct();
                         break;
+                    case 5:
+                        MenuService.FindByCategory();
+                        break;
+                        case 6:
+                            MenuService.MenuFindByPriceRange();
+                        break;
+                    case 7:
+                        MenuService.MenuFindByName();
+                        break;
+                            
 
                     case 0:
                         break;
