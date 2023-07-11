@@ -89,22 +89,36 @@ namespace FinalConsoleProject.Service
 
         public void ShowProductsByCategory(string category)
         {
+            var find_list = new List<Products>();
             foreach (var item in Enum.GetValues(typeof(Categories)))
             {
-                var find = Product.Find(item => item.Categories.ToString().ToLower().Equals(category.ToLower()));
+                var find = Product.FindAll(item => item.Categories.ToString().ToLower().Equals(category.ToLower()));
+                find_list.AddRange(find);
 
-                
+                var products = find_list.GroupBy(x => x.Name).Select(x => x.First()).ToList();
+                var table = new ConsoleTable("Product Name", "Product Price", "Product Categories", "Product Number", "Product Id");
+                foreach (var items in products)
+                {
 
+                    
+                    table.AddRow(items.Name, items.Price, items.Categories, items.Number, items.Id);
+                    
+
+                    
+
+                }
+
+                table.Write();
+                break;
 
                 if (find == null)
                 {
                     throw new Exception("Category is empty");
                 }
-                var table = new ConsoleTable("Product Name", "Product Price", "Product Categories", "Product Number", "Product Id");
-                table.AddRow(find.Name, find.Price, find.Categories, find.Number, find.Id);
-                table.Write();
+                ;
+                 
 
-                break;
+                
             }
 
         }

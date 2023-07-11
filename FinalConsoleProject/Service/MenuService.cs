@@ -117,7 +117,7 @@ namespace FinalConsoleProject.Service
 
                 foreach (var product in products)
                 {
-                    table.AddRow(product.Name, product.Price, product.Categories, product.Number, product.Id);
+                    table.AddRow(product.Name, product.Price + "AZN", product.Categories, product.Number, product.Id);
                 }
 
                 table.Write();
