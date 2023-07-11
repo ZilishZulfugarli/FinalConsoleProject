@@ -41,8 +41,17 @@ namespace FinalConsoleProject.SubMenu
                         MenuService.AddNewProduct();
                         break;
                     case 2:
-                        Console.WriteLine("Deleted employee");
+                        MenuService.UptadeProduct();
                         break;
+
+                    case 3:
+                        MenuService.MenuDeleteProduct();
+                        break;
+
+                    case 4:
+                        MenuService.ShowProduct();
+                        break;
+
                     case 0:
                         break;
                     default:

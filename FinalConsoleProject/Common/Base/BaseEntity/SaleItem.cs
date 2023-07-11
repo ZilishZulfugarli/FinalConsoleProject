@@ -24,6 +24,14 @@ namespace FinalConsoleProject.Common.Base.BaseEntity
 
         public int Count { get; set; }
 
+        internal static object ToDictionary()
+        {
+            throw new NotImplementedException();
+        }
 
+        internal static object FirstOrDefault(Func<object, bool> value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
