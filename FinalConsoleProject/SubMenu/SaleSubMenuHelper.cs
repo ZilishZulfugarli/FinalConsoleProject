@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinalConsoleProject.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,10 +39,10 @@ namespace FinalConsoleProject.SubMenu
                 switch (option)
                 {
                     case 1:
-                        Console.WriteLine("Added student");
+                        MenuService.MenuAddSale();
                         break;
                     case 2:
-                        Console.WriteLine("Deleted student");
+                        MenuService.MenuShowAllSales();
                         break;
                     case 0:
                         break;

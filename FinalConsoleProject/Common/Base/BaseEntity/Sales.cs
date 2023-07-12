@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FinalConsoleProject.Common.Base.BaseEntity
 {
-    internal class Sales : BaseId
+    public class Sales : BaseId
     {
         private static int count;
 
@@ -27,7 +27,7 @@ namespace FinalConsoleProject.Common.Base.BaseEntity
 
         public DateTime Date { get; set; }
 
-        public List<SaleItem> SaleItems { get; set; }
+        public List<SaleItem> SaleItems;
 
 
     }

@@ -12,14 +12,21 @@ using System.Threading.Tasks;
 
 namespace FinalConsoleProject.Service
 {
-    public class MarketService : Products
+    public class MarketService
     {
         public List<Products> Product;
+
+        public List<Sales> Sale;
+
+        public List<SaleItem> SaleItem;
+
 
 
         public MarketService()
         {
             Product = new List<Products>();
+            Sale = new List<Sales>();
+            SaleItem = new List<SaleItem>();
         }
 
 
@@ -100,11 +107,11 @@ namespace FinalConsoleProject.Service
                 foreach (var items in products)
                 {
 
-                    
-                    table.AddRow(items.Name, items.Price, items.Categories, items.Number, items.Id);
-                    
 
-                    
+                    table.AddRow(items.Name, items.Price, items.Categories, items.Number, items.Id);
+
+
+
 
                 }
 
@@ -116,9 +123,9 @@ namespace FinalConsoleProject.Service
                     throw new Exception("Category is empty");
                 }
                 ;
-                 
 
-                
+
+
             }
 
         }
@@ -169,6 +176,53 @@ namespace FinalConsoleProject.Service
 
             table.Write();
 
+        }
+
+        // Sale methods:
+        public int AddSale(int id, int amount)
+        {
+
+            var sale = Product.FirstOrDefault(x => x.Id == id);
+            if (amount < 0)
+            {
+                Console.WriteLine("Number is less than 0!");
+            }
+
+            if (id < 0)
+            {
+                Console.WriteLine("Id is wrong!");
+            }
+
+            var newsaleItem = new SaleItem
+            {
+                Number = amount,
+
+                Products = (Products)sale
+            };
+            SaleItem.Add(newsaleItem);
+
+
+            var newsale = new Sales
+
+            {
+
+                Amount = (int)(amount * newsaleItem.Products.Price),
+
+                Id = id,
+
+                Date = DateTime.Now.Date
+
+            };
+            Sale.Add(newsale);
+
+            return newsale.Id;
+
+
+        }
+
+        public List<Sales> ShowAllSales ()
+        {
+            return Sale;
         }
     }
 }

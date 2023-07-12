@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FinalConsoleProject.Common.Enum;
 using FinalConsoleProject.Common.Base.BaseEntity;
 using ConsoleTables;
+using System.Globalization;
 
 namespace FinalConsoleProject.Service
 {
@@ -144,7 +145,7 @@ namespace FinalConsoleProject.Service
 
 
 
-                
+
 
 
             }
@@ -174,6 +175,63 @@ namespace FinalConsoleProject.Service
             string name = Console.ReadLine().Trim();
 
             marketService.FindProductByName(name);
+        }
+        //Sale methods
+        public static void MenuAddSale()
+            {
+
+            try
+            {
+                Console.WriteLine("Please enter product ID:");
+                int Id = Convert.ToInt32(Console.ReadLine());
+
+                Console.WriteLine("Enter product amount:");
+                int Amount = Convert.ToInt32(Console.ReadLine());
+
+                
+
+                int SaleId = marketService.AddSale(Id, Amount);
+
+                Console.WriteLine($"Added sale with ID: {SaleId}");
+            } 
+            catch (Exception ex) 
+            {
+                Console.WriteLine("Got an error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                Console.WriteLine(ex.Message);
+
+            }
+
+
+        }
+
+        public static void MenuShowAllSales()
+        {
+            try
+            {
+                var products = marketService.ShowAllSales();
+
+                var table = new ConsoleTable("Sale Id", "Sale Amount", "Sale Date");
+
+                if (products.Count == 0)
+                {
+                    Console.WriteLine("No products yet");
+                    return;
+                }
+
+                foreach (var product in products)
+                {
+                    table.AddRow(product.Id, product.Amount + "AZN", product.Date);
+                }
+
+                table.Write();
+
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine("Oops! Got an error!");
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }

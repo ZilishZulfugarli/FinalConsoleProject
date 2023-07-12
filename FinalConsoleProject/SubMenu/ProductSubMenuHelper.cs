@@ -60,7 +60,7 @@ namespace FinalConsoleProject.SubMenu
                     case 7:
                         MenuService.MenuFindByName();
                         break;
-                            
+                    
 
                     case 0:
                         break;
