@@ -193,11 +193,13 @@ namespace FinalConsoleProject.Service
                 Console.WriteLine("Id is wrong!");
             }
 
+            
             var newsaleItem = new SaleItem
             {
                 Number = amount,
 
-                Products = (Products)sale
+                Products = (Products)sale,
+
             };
             SaleItem.Add(newsaleItem);
 
@@ -206,16 +208,18 @@ namespace FinalConsoleProject.Service
 
             {
 
+
                 Amount = (int)(amount * newsaleItem.Products.Price),
 
                 Id = id,
 
-                Date = DateTime.Now.Date
+                Date = DateTime.Now.AddMinutes(1),
+                                           
 
             };
             Sale.Add(newsale);
 
-            return newsale.Id;
+            return newsale.Id; 
 
 
         }
@@ -223,6 +227,90 @@ namespace FinalConsoleProject.Service
         public List<Sales> ShowAllSales ()
         {
             return Sale;
+        }
+
+        //public void DeleteSaleByName(string name, int id)
+        //{
+        //    var list = Sale.Find(x => x.Equals(name) == );
+        //}
+
+        public void DeleteSaleById(int id)
+        {
+            var deletedsale = Sale.FirstOrDefault(x => x.Id == id);
+            if (deletedsale == null)
+            { throw new Exception($"There is not product for {id} ID "); }
+
+            Sale = Sale.Where(x => x.Id != id).ToList();
+        }
+
+        public void ShowSaleByDateRange (DateTime date1, DateTime date2)
+        {
+
+            var daterange = Sale.FindAll(x => x.Date >= date1 && x.Date <= date2).ToList();
+
+            
+
+            var table = new ConsoleTable("Product Id", "Product Amount", "Product Date");
+
+            if (daterange.Count == 0)
+            {
+                Console.WriteLine("No products yet");
+                return;
+            }
+
+            foreach (var product in daterange)
+            {
+                table.AddRow(product.Id, product.Amount + "AZN", product.Date);
+            }
+
+            table.Write();
+        }
+
+        //public void ShowSaleByPriceRange(Products price1, int price2)
+        //{
+        //    var pricerange = Sale.FindAll(x => x.);
+        //}
+
+        public void ShowSaleByDate (DateTime date)
+        {
+            var bydate = Sale.FindAll(x => x.Date == date).ToList();
+
+            var table = new ConsoleTable("Product Id", "Product Amount", "Product Date");
+
+            if (bydate.Count == 0)
+            {
+                Console.WriteLine("No products yet");
+                return;
+            }
+
+            foreach (var product in bydate)
+            {
+                table.AddRow(product.Id, product.Amount + "AZN", product.Date);
+            }
+
+            table.Write();
+
+
+        }
+
+        public void ShowSaleById(int id)
+        {
+            var salebyid = Sale.FindAll(x => x.Id == id).ToList();
+
+            var table = new ConsoleTable("Product Id", "Product Amount", "Product Date");
+
+            if (salebyid.Count == 0)
+            {
+                Console.WriteLine("No products yet");
+                return;
+            }
+
+            foreach (var sale in salebyid)
+            {
+                table.AddRow(sale.Id, sale.Amount + "AZN", sale.Date, SaleItem.Count, SaleItem); ;
+            }
+
+            table.Write();
         }
     }
 }

@@ -16,13 +16,13 @@ namespace FinalConsoleProject.SubMenu
             do
             {
                 Console.WriteLine("1. Add new sale");
-                Console.WriteLine("2. Delete student");
+                Console.WriteLine("2. Show all sales");
                 Console.WriteLine("3. Remove sale");
-                Console.WriteLine("4. Show all sales");
-                Console.WriteLine("5. Show sales by history range");
-                Console.WriteLine("6. Show product by price range");
-                Console.WriteLine("7. Showing sales on a given date");
-                Console.WriteLine("8. Show sale information by ID");
+                
+                Console.WriteLine("4. Show sales by history range");
+                Console.WriteLine("5. Show product by price range");
+                Console.WriteLine("6. Showing sales on a given date");
+                Console.WriteLine("7. Show sale information by ID");
 
                 Console.WriteLine("0. Go back");
 
@@ -43,6 +43,12 @@ namespace FinalConsoleProject.SubMenu
                         break;
                     case 2:
                         MenuService.MenuShowAllSales();
+                        break;
+                    case 3:
+                        MenuService.MenuDeleteById();
+                        break;
+                    case 4:
+                        MenuService.MenuShowByDateRange();
                         break;
                     case 0:
                         break;

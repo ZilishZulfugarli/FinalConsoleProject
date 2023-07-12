@@ -8,6 +8,7 @@ using FinalConsoleProject.Common.Enum;
 using FinalConsoleProject.Common.Base.BaseEntity;
 using ConsoleTables;
 using System.Globalization;
+using System.Security.Cryptography.X509Certificates;
 
 namespace FinalConsoleProject.Service
 {
@@ -178,7 +179,7 @@ namespace FinalConsoleProject.Service
         }
         //Sale methods
         public static void MenuAddSale()
-            {
+        {
 
             try
             {
@@ -188,13 +189,13 @@ namespace FinalConsoleProject.Service
                 Console.WriteLine("Enter product amount:");
                 int Amount = Convert.ToInt32(Console.ReadLine());
 
-                
+
 
                 int SaleId = marketService.AddSale(Id, Amount);
 
                 Console.WriteLine($"Added sale with ID: {SaleId}");
-            } 
-            catch (Exception ex) 
+            }
+            catch (Exception ex)
             {
                 Console.WriteLine("Got an error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 Console.WriteLine(ex.Message);
@@ -232,6 +233,40 @@ namespace FinalConsoleProject.Service
                 Console.WriteLine("Oops! Got an error!");
                 Console.WriteLine(ex.Message);
             }
+
+
+        }
+
+        public static void MenuDeleteById()
+        {
+            try
+            {
+                Console.WriteLine("Enter Id number:");
+                int id = Convert.ToInt32(Console.ReadLine());
+
+                marketService.DeleteSaleById(id);
+
+                Console.WriteLine($"Succesffully deleted sale with Id: {id}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Have some problem!");
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public static void MenuShowByDateRange()
+        {
+            Console.WriteLine("Enter start date:");
+            DateTime date1 = Convert.ToDateTime(Console.ReadLine());
+
+            Console.WriteLine("Enter end date:");
+            DateTime date2 = Convert.ToDateTime(Console.ReadLine());
+            marketService.ShowSaleByDateRange(date1, date2);
+
+            
+
+
         }
     }
 }
