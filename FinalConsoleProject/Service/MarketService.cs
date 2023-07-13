@@ -193,7 +193,7 @@ namespace FinalConsoleProject.Service
                 Console.WriteLine("Id is wrong!");
             }
 
-            
+
             var newsaleItem = new SaleItem
             {
                 Number = amount,
@@ -214,25 +214,43 @@ namespace FinalConsoleProject.Service
                 Id = id,
 
                 Date = DateTime.Now.AddMinutes(1),
-                                           
+
 
             };
             Sale.Add(newsale);
 
-            return newsale.Id; 
+            return newsale.Id;
 
 
         }
 
-        public List<Sales> ShowAllSales ()
+        public List<Sales> ShowAllSales()
         {
             return Sale;
         }
 
-        //public void DeleteSaleByName(string name, int id)
-        //{
-        //    var list = Sale.Find(x => x.Equals(name) == );
-        //}
+        public void DeleteSaleByName(string name)
+        {
+            var salebyname = Product.FirstOrDefault(x => x.Name != name);
+
+            var sale = Product.Where(x => x.Name != name).ToList();
+
+            if (salebyname == null)
+            {
+                Console.WriteLine("Got an error!");
+            }
+
+            var table = new ConsoleTable("Sale Id", "Product Name", "Sale Amount", "Sale Date");
+            foreach (var item in Sale)
+            {
+                foreach (var item2 in SaleItem)
+                {
+                    table.AddRow(item.Id, item2.Products.Name, item.Amount, item.Date);
+
+                }
+            }
+            table.Write();
+        }
 
         public void DeleteSaleById(int id)
         {
@@ -243,12 +261,12 @@ namespace FinalConsoleProject.Service
             Sale = Sale.Where(x => x.Id != id).ToList();
         }
 
-        public void ShowSaleByDateRange (DateTime date1, DateTime date2)
+        public void ShowSaleByDateRange(DateTime date1, DateTime date2)
         {
 
             var daterange = Sale.FindAll(x => x.Date >= date1 && x.Date <= date2).ToList();
 
-            
+
 
             var table = new ConsoleTable("Product Id", "Product Amount", "Product Date");
 
@@ -266,12 +284,23 @@ namespace FinalConsoleProject.Service
             table.Write();
         }
 
-        //public void ShowSaleByPriceRange(Products price1, int price2)
-        //{
-        //    var pricerange = Sale.FindAll(x => x.);
-        //}
+        public void ShowSaleByPriceRange(decimal price1, decimal price2)
+        {
+            var pricerange = Sale.FindAll(x => x.Amount > price1 && x.Amount < price2);
 
-        public void ShowSaleByDate (DateTime date)
+            var table = new ConsoleTable("Sale Id", "Product Name", "Sale Amount", "Sale Date");
+
+            foreach (var salebypricerange in pricerange)
+            {
+                foreach (var sale in SaleItem)
+                {
+                    table.AddRow(salebypricerange.Id, sale.Products.Name, salebypricerange.Amount, salebypricerange.Date);
+                }
+            }
+            table.Write();
+        }
+
+        public void ShowSaleByDate(DateTime date)
         {
             var bydate = Sale.FindAll(x => x.Date == date).ToList();
 
@@ -297,7 +326,7 @@ namespace FinalConsoleProject.Service
         {
             var salebyid = Sale.FindAll(x => x.Id == id).ToList();
 
-            var table = new ConsoleTable("Product Id", "Product Amount", "Product Date");
+            var table = new ConsoleTable("Sale Id", "Product Name", "Sale Amount", "Sale Date");
 
             if (salebyid.Count == 0)
             {
@@ -307,7 +336,10 @@ namespace FinalConsoleProject.Service
 
             foreach (var sale in salebyid)
             {
-                table.AddRow(sale.Id, sale.Amount + "AZN", sale.Date, SaleItem.Count, SaleItem); ;
+                foreach (var product in SaleItem)
+                {
+                    table.AddRow(sale.Id, product.Products.Name, sale.Amount + " AZN", sale.Date);
+                }
             }
 
             table.Write();

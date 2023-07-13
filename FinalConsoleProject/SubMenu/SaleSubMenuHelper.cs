@@ -18,7 +18,7 @@ namespace FinalConsoleProject.SubMenu
                 Console.WriteLine("1. Add new sale");
                 Console.WriteLine("2. Show all sales");
                 Console.WriteLine("3. Remove sale");
-                
+
                 Console.WriteLine("4. Show sales by history range");
                 Console.WriteLine("5. Show product by price range");
                 Console.WriteLine("6. Showing sales on a given date");
@@ -45,15 +45,27 @@ namespace FinalConsoleProject.SubMenu
                         MenuService.MenuShowAllSales();
                         break;
                     case 3:
-                        MenuService.MenuDeleteById();
+                        MenuService.MenuDeleteSaleByName();
                         break;
                     case 4:
+                        MenuService.MenuDeleteById();
+                        break;
+                    case 5:
                         MenuService.MenuShowByDateRange();
+                        break;
+                    case 6:
+                        MenuService.MenuShowSaleByDate();
+                        break;
+                    case 7:
+                        MenuService.MenuShowSaleById();
+                        break;
+                    case 8:
+                        MenuService.MenuShowSaleById();
                         break;
                     case 0:
                         break;
                     default:
-                        Console.WriteLine("There is no such option! Please enter number 0-9");
+                        Console.WriteLine("There is no such option! Please enter number 0-8");
                         break;
                 }
 

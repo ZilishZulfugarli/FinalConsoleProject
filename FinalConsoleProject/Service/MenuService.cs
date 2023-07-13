@@ -237,6 +237,14 @@ namespace FinalConsoleProject.Service
 
         }
 
+        public static void MenuDeleteSaleByName()
+        {
+            Console.WriteLine("Enter name for search:");
+            string name = Console.ReadLine();
+
+            marketService.DeleteSaleByName(name);
+        }
+
         public static void MenuDeleteById()
         {
             try
@@ -264,9 +272,35 @@ namespace FinalConsoleProject.Service
             DateTime date2 = Convert.ToDateTime(Console.ReadLine());
             marketService.ShowSaleByDateRange(date1, date2);
 
-            
 
 
+
+        }
+
+        public static void MenuShowSaleByPriceRange()
+        {
+            Console.WriteLine("Enter start price:");
+            decimal startprice = Convert.ToInt32(Console.ReadLine());
+
+            Console.WriteLine("Enter end price:");
+            decimal endprice = Convert.ToInt32(Console.ReadLine());
+
+            marketService.ShowSaleByPriceRange(startprice, endprice);
+        }
+        public static void MenuShowSaleByDate()
+        {
+            Console.WriteLine("Enter date for search:");
+            DateTime date = Convert.ToDateTime(Console.ReadLine());
+
+            marketService.ShowSaleByDate(date);
+        }
+
+        public static void MenuShowSaleById()
+        {
+            Console.WriteLine("Enter Id for search:");
+            int id = Convert.ToInt32(Console.ReadLine());
+
+            marketService.ShowSaleById(id);
         }
     }
 }
