@@ -25,7 +25,7 @@ namespace FinalConsoleProject.Common.Base.BaseEntity
 
         public string Name { get; set; }
 
-        public int Number { get; set; }
+        public int StockNumber { get; set; }
         public decimal Price { get; set; }
         public Categories Categories { get; set; }
 

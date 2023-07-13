@@ -29,6 +29,8 @@ namespace FinalConsoleProject.Common.Base.BaseEntity
 
         public List<SaleItem> SaleItems;
 
+        public int SaleList { get; set; }
+
 
     }
 }

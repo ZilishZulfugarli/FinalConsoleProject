@@ -22,7 +22,7 @@ namespace FinalConsoleProject.Common.Base.BaseEntity
 
         public Products Products { get; set; }
 
-        public int Number { get; set; }
+        public int SaleNumber { get; set; }
 
         
     }

@@ -119,7 +119,7 @@ namespace FinalConsoleProject.Service
 
                 foreach (var product in products)
                 {
-                    table.AddRow(product.Name, product.Price + "AZN", product.Categories, product.Number, product.Id);
+                    table.AddRow(product.Name, product.Price + "AZN", product.Categories, product.StockNumber, product.Id);
                 }
 
                 table.Write();
@@ -177,6 +177,7 @@ namespace FinalConsoleProject.Service
 
             marketService.FindProductByName(name);
         }
+        //----------------------------------------------------------------------------------------------------------------------------
         //Sale methods
         public static void MenuAddSale()
         {
@@ -187,11 +188,13 @@ namespace FinalConsoleProject.Service
                 int Id = Convert.ToInt32(Console.ReadLine());
 
                 Console.WriteLine("Enter product amount:");
-                int Amount = Convert.ToInt32(Console.ReadLine());
+                int SaleNumber = Convert.ToInt32(Console.ReadLine());
 
 
 
-                int SaleId = marketService.AddSale(Id, Amount);
+                int SaleId = marketService.AddSale(Id, SaleNumber);
+
+               
 
                 Console.WriteLine($"Added sale with ID: {SaleId}");
             }

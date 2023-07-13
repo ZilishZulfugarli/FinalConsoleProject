@@ -54,7 +54,7 @@ namespace FinalConsoleProject.Service
 
                 Price = price,
 
-                Number = number,
+                StockNumber = number,
 
                 Categories = (Categories)parsedCategories
             };
@@ -75,7 +75,7 @@ namespace FinalConsoleProject.Service
 
             pro.Price = price;
 
-            pro.Number = number;
+            pro.StockNumber = number;
 
 
         }
@@ -108,7 +108,7 @@ namespace FinalConsoleProject.Service
                 {
 
 
-                    table.AddRow(items.Name, items.Price, items.Categories, items.Number, items.Id);
+                    table.AddRow(items.Name, items.Price, items.Categories, items.StockNumber, items.Id);
 
 
 
@@ -116,13 +116,7 @@ namespace FinalConsoleProject.Service
                 }
 
                 table.Write();
-                break;
 
-                if (find == null)
-                {
-                    throw new Exception("Category is empty");
-                }
-                ;
 
 
 
@@ -156,7 +150,7 @@ namespace FinalConsoleProject.Service
 
             foreach (var product in pro)
             {
-                table.AddRow(product.Name, product.Price, product.Categories, product.Number, product.Id);
+                table.AddRow(product.Name, product.Price, product.Categories, product.StockNumber, product.Id);
             }
 
             table.Write();
@@ -171,7 +165,7 @@ namespace FinalConsoleProject.Service
 
             foreach (var product in pro)
             {
-                table.AddRow(product.Name, product.Price, product.Categories, product.Number, product.Id);
+                table.AddRow(product.Name, product.Price, product.Categories, product.StockNumber, product.Id);
             }
 
             table.Write();
@@ -179,11 +173,26 @@ namespace FinalConsoleProject.Service
         }
 
         // Sale methods:
-        public int AddSale(int id, int amount)
+        public int AddSale(int id, int salenumber)
         {
 
+            
+
             var sale = Product.FirstOrDefault(x => x.Id == id);
-            if (amount < 0)
+
+            
+
+            if (salenumber > sale.StockNumber )
+            {
+                throw new Exception($"Haven't enough {sale.Name} in stock ");
+            }
+
+            if (salenumber < sale.StockNumber)
+            {
+                sale.StockNumber = sale.StockNumber - salenumber;
+            }
+
+            if (salenumber < 0)
             {
                 Console.WriteLine("Number is less than 0!");
             }
@@ -196,7 +205,7 @@ namespace FinalConsoleProject.Service
 
             var newsaleItem = new SaleItem
             {
-                Number = amount,
+                SaleNumber = salenumber,
 
                 Products = (Products)sale,
 
@@ -209,7 +218,7 @@ namespace FinalConsoleProject.Service
             {
 
 
-                Amount = (int)(amount * newsaleItem.Products.Price),
+                Amount = (int)(salenumber * newsaleItem.Products.Price),
 
                 Id = id,
 
