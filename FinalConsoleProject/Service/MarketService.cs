@@ -196,6 +196,7 @@ namespace FinalConsoleProject.Service
         public void AddSale(int listsale, int id, int salenumber)
         {
 
+
             var sale = Product.Find(x => x.Id == id);
 
             var sameproductid = SaleItem.Find(x => x.Id.Equals(id));
@@ -207,12 +208,12 @@ namespace FinalConsoleProject.Service
                     throw new Exception("error");
                 }
                 sale.StockNumber -= salenumber;
-                
+
                 foreach (var item in Sale)
                 {
                     item.Amount += (int)(salenumber * sale.Price);
                 }
-                
+
             }
             else
             {
@@ -225,6 +226,8 @@ namespace FinalConsoleProject.Service
                 {
                     Console.WriteLine("Number must be bigger than 0!");
                 }
+
+
 
                 if (id < 0)
                 {
@@ -242,28 +245,21 @@ namespace FinalConsoleProject.Service
                         Products = (Products)sale,
 
                     };
+
                     SaleItem.Add(newsaleItem);
 
                     var newsale = new Sales
-
                     {
-
+                        SaleItems = SaleItem,
 
                         Amount = (int)(salenumber * newsaleItem.Products.Price),
 
-                        Id = id,
-
                         Date = DateTime.Now.AddMinutes(1),
 
-
-
                     };
-                    Sale.Add(newsale);
-                    SaleItem.Clear();
-                    
-                }
 
-                
+                    Sale.Add(newsale);
+                }
             }
 
 
@@ -313,31 +309,37 @@ namespace FinalConsoleProject.Service
             return Sale;
         }
 
-        //public void DeleteSaleByName(string name, int reversenumber)
-        //{
-        //    var salebyname = Product.FirstOrDefault(x => x.Name != name);
+        public void DeleteSaleByName(string name, int reversenumber)
+        {
+            var salebyname = Product.FirstOrDefault(x => x.Name == name);
 
-        //    var salename = SaleItem.FirstOrDefault (x => x.Products.Name != name); 
+            if (salebyname == null)
+            {
+                Console.WriteLine("Got an error!");
+            }
 
-        //    var sale = Product.Where(x => x.Name != name).ToList();
+            salebyname.StockNumber += reversenumber;
 
-        //    if (salebyname == null)
-        //    {
-        //        Console.WriteLine("Got an error!");
-        //    }
+            
 
-        //    salebyname.StockNumber += reversenumber;
+            foreach (var item in SaleItem)
+            {
+                if (item.Products.Price < 0)
+                {
+                    return;
+                }
+                foreach (var item2 in Sale)
+                {
+                    
+                    item2.Amount -= (int)item.Products.Price * reversenumber;
+                    item.SaleNumber -= reversenumber;
 
-        //    salename.SaleNumber -= reversenumber;
+                    
+                }
+            }
 
-        //    foreach (var item in Sale)
-        //    {
-        //        foreach (var item2 in SaleItem)
-        //        {
-        //            item.Amount += (int)item2.Products.Price * reversenumber;
-        //        }
-        //    }
-
+            
+        }
 
 
         //    var table = new ConsoleTable("Sale Id", "Product Name", "Sale Amount", "Sale Date");

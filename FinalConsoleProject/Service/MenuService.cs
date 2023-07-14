@@ -9,6 +9,8 @@ using FinalConsoleProject.Common.Base.BaseEntity;
 using ConsoleTables;
 using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
+using System.Data;
+using System.ComponentModel.Design;
 
 namespace FinalConsoleProject.Service
 {
@@ -268,14 +270,17 @@ namespace FinalConsoleProject.Service
                         {
                             if (item.Id == product.Id)
                             {
-                                table.AddRow(" ", product.Name, item.Amount + " AZN", item.Date, product.Price, product.StockNumber);
+                                table.AddRow("", product.Name, item.Amount + " AZN", item.Date, product.Price, product.StockNumber);
                             }
                         }
                     }
 
                     table.Write();
+                    
                 }
+                
             }
+            
 
             catch (Exception ex)
             {
@@ -286,16 +291,25 @@ namespace FinalConsoleProject.Service
 
         }
 
-        //public static void MenuDeleteSaleByName()
-        //{
-        //    Console.WriteLine("Enter name for search:");
-        //    string name = Console.ReadLine();
+        public static void MenuDeleteSaleByName()
+        {
+            try
+            {
+                Console.WriteLine("Enter name for search:");
+                string name = Console.ReadLine();
 
-        //    Console.WriteLine("Enter number how much you want reverse:");
-        //    int reversenumber = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Enter number how much you want reverse:");
+                int reversenumber = Convert.ToInt32(Console.ReadLine());
 
-        //    marketService.DeleteSaleByName(name, reversenumber);
-        //}
+                marketService.DeleteSaleByName(name, reversenumber);
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine("Have some problems");
+                Console.WriteLine(ex.Message);
+            }
+        }
 
         public static void MenuDeleteById()
         {
