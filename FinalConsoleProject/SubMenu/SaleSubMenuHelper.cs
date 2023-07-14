@@ -17,12 +17,12 @@ namespace FinalConsoleProject.SubMenu
             {
                 Console.WriteLine("1. Add new sale");
                 Console.WriteLine("2. Show all sales");
-                Console.WriteLine("3. Remove sale");
+                Console.WriteLine("3. Reverse product from sale");
 
-                Console.WriteLine("4. Show sales by history range");
-                Console.WriteLine("5. Show product by price range");
-                Console.WriteLine("6. Showing sales on a given date");
-                Console.WriteLine("7. Show sale information by ID");
+                Console.WriteLine("4. Delete sale by Id");
+                Console.WriteLine("5. Show sale by date range");
+                Console.WriteLine("6. Show sale by date");
+                Console.WriteLine("7. Show sale by ID");
 
                 Console.WriteLine("0. Go back");
 

@@ -26,16 +26,18 @@ namespace FinalConsoleProject.Service
                 Console.WriteLine("Enter products's price:");
                 decimal price = Convert.ToDecimal(Console.ReadLine().Trim());
 
-                Console.WriteLine("Enter product's category:");
 
-                Console.WriteLine("------------------------------------------------------");
+
+                var table = new ConsoleTable("Categories");
 
                 foreach (var item in Enum.GetValues(typeof(Categories)))
                 {
-                    Console.WriteLine(item);
+                    table.AddRow(item);
                 }
 
-                Console.WriteLine("------------------------------------------------------");
+                table.Write();
+
+                Console.WriteLine("Enter product's category:");
 
                 string category = Console.ReadLine().Trim();
 
@@ -184,23 +186,30 @@ namespace FinalConsoleProject.Service
 
             try
             {
-                Console.WriteLine("Please enter product ID:");
-                int Id = Convert.ToInt32(Console.ReadLine());
-
-                Console.WriteLine("Enter product amount:");
-                int SaleNumber = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("Please enter products count:");
+                int listnumber = Convert.ToInt32(Console.ReadLine());
 
 
+                for (int i = 1; i <= listnumber; i++)
+                {
+                    Console.WriteLine("Please enter product ID:");
+                    int Id = Convert.ToInt32(Console.ReadLine());
 
-                int SaleId = marketService.AddSale(Id, SaleNumber);
+                    Console.WriteLine("Enter product amount:");
+                    int SaleNumber = Convert.ToInt32(Console.ReadLine());
 
-               
+                    marketService.AddSale(listnumber, Id, SaleNumber);
+                }
 
-                Console.WriteLine($"Added sale with ID: {SaleId}");
+                Console.WriteLine($"Added sale with ID");
+
+
+
+
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Got an error!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                Console.WriteLine("Got an error!");
                 Console.WriteLine(ex.Message);
 
             }
@@ -214,7 +223,7 @@ namespace FinalConsoleProject.Service
             {
                 var products = marketService.ShowAllSales();
 
-                var table = new ConsoleTable("Sale Id", "Sale Amount", "Sale Date");
+                var table = new ConsoleTable("Sale Id", "Product Name", "Sale Amount", "Sale Date", "Product Price", "Last stock number");
 
                 if (products.Count == 0)
                 {
@@ -222,9 +231,15 @@ namespace FinalConsoleProject.Service
                     return;
                 }
 
-                foreach (var product in products)
+                foreach (var item in products)
                 {
-                    table.AddRow(product.Id, product.Amount + "AZN", product.Date);
+                    foreach (var product in marketService.Product)
+                    {
+                        if (item.Id == product.Id)
+                        {
+                            table.AddRow(item.Id, product.Name, item.Amount + " AZN", item.Date, product.Price, product.StockNumber);
+                        }
+                    }
                 }
 
                 table.Write();
@@ -245,7 +260,10 @@ namespace FinalConsoleProject.Service
             Console.WriteLine("Enter name for search:");
             string name = Console.ReadLine();
 
-            marketService.DeleteSaleByName(name);
+            Console.WriteLine("Enter number how much you want reverse:");
+            int reversenumber = Convert.ToInt32(Console.ReadLine());
+
+            marketService.DeleteSaleByName(name, reversenumber);
         }
 
         public static void MenuDeleteById()
