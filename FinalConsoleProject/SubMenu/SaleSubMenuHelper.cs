@@ -44,14 +44,14 @@ namespace FinalConsoleProject.SubMenu
                     case 2:
                         MenuService.MenuShowAllSales();
                         break;
-                    case 3:
-                        MenuService.MenuDeleteSaleByName();
-                        break;
+                    //case 3:
+                    //    MenuService.MenuDeleteSaleByName();
+                    //    break;
                     case 4:
                         MenuService.MenuDeleteById();
                         break;
                     case 5:
-                        MenuService.MenuShowByDateRange();
+                        MenuService.MenuShowByDateRange(); 
                         break;
                     case 6:
                         MenuService.MenuShowSaleByDate();

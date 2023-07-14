@@ -44,9 +44,12 @@ namespace FinalConsoleProject.Service
                 Console.WriteLine("Enter product's stock number:");
                 int number = Convert.ToInt32(Console.ReadLine().Trim());
 
-                int productId = marketService.AddProduct(name, price, number, category);
+                marketService.AddProduct(name, price, number, category);
 
-                Console.WriteLine($"Added {name} with ID: {productId}");
+                foreach (var item in marketService.Product)
+                {
+                    Console.WriteLine($"Added {name} with Id : {item.Id}");
+                }
             }
             catch (Exception ex)
             {
@@ -161,23 +164,45 @@ namespace FinalConsoleProject.Service
 
         public static void MenuFindByPriceRange()
         {
-            Console.WriteLine("Enter starting price:");
-            int startprice = Convert.ToInt32(Console.ReadLine().Trim());
+            try
+            {
+                Console.WriteLine("Enter starting price:");
+                int startprice = Convert.ToInt32(Console.ReadLine().Trim());
 
-            Console.WriteLine("Enter ending price:");
-            int endprice = Convert.ToInt32(Console.ReadLine().Trim());
+                Console.WriteLine("Enter ending price:");
+                int endprice = Convert.ToInt32(Console.ReadLine().Trim());
 
-            marketService.FindByPriceRange(startprice, endprice);
+                marketService.FindByPriceRange(startprice, endprice);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Have some problem!");
+                Console.WriteLine(ex.Message);
+            }
 
         }
 
 
         public static void MenuFindByName()
         {
-            Console.WriteLine("Enter product name:");
-            string name = Console.ReadLine().Trim();
+            try
+            {
+                Console.WriteLine("Enter product name:");
+                string name = Console.ReadLine().Trim();
 
-            marketService.FindProductByName(name);
+                if (string.IsNullOrEmpty(name))
+                {
+                    throw new Exception("Got an error!");
+                }
+
+
+                marketService.FindProductByName(name);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Have some error!");
+                Console.WriteLine(ex.Message);
+            }
         }
         //----------------------------------------------------------------------------------------------------------------------------
         //Sale methods
@@ -199,10 +224,12 @@ namespace FinalConsoleProject.Service
                     int SaleNumber = Convert.ToInt32(Console.ReadLine());
 
                     marketService.AddSale(listnumber, Id, SaleNumber);
+                    
                 }
 
                 Console.WriteLine($"Added sale with ID");
 
+                
 
 
 
@@ -223,27 +250,31 @@ namespace FinalConsoleProject.Service
             {
                 var products = marketService.ShowAllSales();
 
-                var table = new ConsoleTable("Sale Id", "Product Name", "Sale Amount", "Sale Date", "Product Price", "Last stock number");
-
-                if (products.Count == 0)
+                foreach (var items in marketService.Sale)
                 {
-                    Console.WriteLine("No products yet");
-                    return;
-                }
+                    var table = new ConsoleTable($"Sale Id: {items.Id}", "Product Name", "Sale Amount", "Sale Date", "Product Price", "Last stock number");
 
-                foreach (var item in products)
-                {
-                    foreach (var product in marketService.Product)
+
+
+                    if (products.Count == 0)
                     {
-                        if (item.Id == product.Id)
+                        Console.WriteLine("No products yet");
+                        return;
+                    }
+
+                    foreach (var item in products)
+                    {
+                        foreach (var product in marketService.Product)
                         {
-                            table.AddRow(item.Id, product.Name, item.Amount + " AZN", item.Date, product.Price, product.StockNumber);
+                            if (item.Id == product.Id)
+                            {
+                                table.AddRow(" ", product.Name, item.Amount + " AZN", item.Date, product.Price, product.StockNumber);
+                            }
                         }
                     }
+
+                    table.Write();
                 }
-
-                table.Write();
-
             }
 
             catch (Exception ex)
@@ -255,16 +286,16 @@ namespace FinalConsoleProject.Service
 
         }
 
-        public static void MenuDeleteSaleByName()
-        {
-            Console.WriteLine("Enter name for search:");
-            string name = Console.ReadLine();
+        //public static void MenuDeleteSaleByName()
+        //{
+        //    Console.WriteLine("Enter name for search:");
+        //    string name = Console.ReadLine();
 
-            Console.WriteLine("Enter number how much you want reverse:");
-            int reversenumber = Convert.ToInt32(Console.ReadLine());
+        //    Console.WriteLine("Enter number how much you want reverse:");
+        //    int reversenumber = Convert.ToInt32(Console.ReadLine());
 
-            marketService.DeleteSaleByName(name, reversenumber);
-        }
+        //    marketService.DeleteSaleByName(name, reversenumber);
+        //}
 
         public static void MenuDeleteById()
         {
@@ -286,12 +317,20 @@ namespace FinalConsoleProject.Service
 
         public static void MenuShowByDateRange()
         {
-            Console.WriteLine("Enter start date:");
-            DateTime date1 = Convert.ToDateTime(Console.ReadLine());
+            try
+            {
+                Console.WriteLine("Enter start date:  (MM/dd/yyyy)");
+                DateTime date1 = Convert.ToDateTime(Console.ReadLine());
 
-            Console.WriteLine("Enter end date:");
-            DateTime date2 = Convert.ToDateTime(Console.ReadLine());
-            marketService.ShowSaleByDateRange(date1, date2);
+                Console.WriteLine("Enter end date:  (MM/dd/yyyy)");
+                DateTime date2 = Convert.ToDateTime(Console.ReadLine());
+                marketService.ShowSaleByDateRange(date1, date2);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Have some problem:(");
+                Console.WriteLine(ex.Message);
+            }
 
 
 
@@ -310,7 +349,7 @@ namespace FinalConsoleProject.Service
         }
         public static void MenuShowSaleByDate()
         {
-            Console.WriteLine("Enter date for search:");
+            Console.WriteLine("Enter date for search:  (MM/dd/yyyy)");
             DateTime date = Convert.ToDateTime(Console.ReadLine());
 
             marketService.ShowSaleByDate(date);

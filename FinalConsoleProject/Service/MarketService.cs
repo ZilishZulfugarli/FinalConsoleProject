@@ -5,10 +5,13 @@ using FinalConsoleProject.Common.Enum;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace FinalConsoleProject.Service
 {
@@ -30,37 +33,55 @@ namespace FinalConsoleProject.Service
         }
 
 
-        public int AddProduct(string name, decimal price, int number, string category)
+        public void AddProduct(string name, decimal price, int number, string category)
         {
-            if (string.IsNullOrEmpty(name))
-                throw new FormatException("Name is empty!");
 
-            if (number < 0)
-                throw new FormatException("Number less than 0!");
+            var list = Product.Find(x => x.Name.Equals(name) && x.Price.Equals(price));
 
-            if (price < 0)
-                throw new FormatException("Price little than zero!");
-
-            bool isSuccelfull = Enum.TryParse(typeof(Categories), category, true, out object parsedCategories);
-
-            if (!isSuccelfull)
+            if (list == null)
             {
-                throw new FormatException("Category is empty!");
+                if (string.IsNullOrEmpty(name))
+                    throw new FormatException("Name is empty!");
+
+                if (number < 0)
+                    throw new FormatException("Number less than 0!");
+
+                if (price < 0)
+                    throw new FormatException("Price little than zero!");
+
+                bool isSuccelfull = Enum.TryParse(typeof(Categories), category, true, out object parsedCategories);
+
+                if (!isSuccelfull)
+                {
+                    throw new FormatException("Category is empty!");
+                }
+
+
+
+
+
+                var newProducts = new Products
+                {
+                    Name = name,
+
+                    Price = price,
+
+                    StockNumber = number,
+
+                    Categories = (Categories)parsedCategories
+                };
+
+                Product.Add(newProducts);
+
+
+
+                Console.WriteLine(newProducts.Id);
             }
-
-            var newProducts = new Products
+            else
             {
-                Name = name,
+                list.StockNumber += number;
 
-                Price = price,
-
-                StockNumber = number,
-
-                Categories = (Categories)parsedCategories
-            };
-
-            Product.Add(newProducts);
-            return newProducts.Id;
+            }
 
 
 
@@ -101,27 +122,17 @@ namespace FinalConsoleProject.Service
             {
                 var find = Product.FindAll(item => item.Categories.ToString().ToLower().Equals(category.ToLower()));
                 find_list.AddRange(find);
+            }
+            var products = find_list.GroupBy(x => x.Name).Select(x => x.First()).ToList();
+            var table = new ConsoleTable("Product Name", "Product Price", "Product Categories", "Product Number", "Product Id");
+            foreach (var items in products)
+            {
 
-                var products = find_list.GroupBy(x => x.Name).Select(x => x.First()).ToList();
-                var table = new ConsoleTable("Product Name", "Product Price", "Product Categories", "Product Number", "Product Id");
-                foreach (var items in products)
-                {
-
-
-                    table.AddRow(items.Name, items.Price, items.Categories, items.StockNumber, items.Id);
-
-
-
-
-                }
-
-                table.Write();
-
-
-
+                table.AddRow(items.Name, items.Price, items.Categories, items.StockNumber, items.Id);
 
             }
 
+            table.Write();
         }
 
         public void FindByPriceRange(decimal startprice, decimal endprice)
@@ -144,6 +155,11 @@ namespace FinalConsoleProject.Service
 
             var pro = Product.Where(x => x.Price >= startprice && x.Price <= endprice).ToList();
 
+            if (pro == null)
+            {
+                throw new Exception("There aren't any product for this price range:)");
+            }
+
 
             var table = new ConsoleTable("Product Name", "Product Price", "Product Categories", "Product Number", "Product Id");
 
@@ -158,15 +174,19 @@ namespace FinalConsoleProject.Service
 
         public void FindProductByName(string name)
         {
-            var pro = Product.FindAll(x => x.Name.Trim().ToLower() == name).ToList();
+            var pro = Product.Find(x => x.Name.Trim().ToLower() == name.ToLower());
+
+            if (pro == null)
+            {
+                throw new Exception("There isn't product with this name:(");
+                return;
+
+            }
 
             var table = new ConsoleTable("Product Name", "Product Price", "Product Categories", "Product Number", "Product Id");
 
+            table.AddRow(pro.Name, pro.Price, pro.Categories, pro.StockNumber, pro.Id);
 
-            foreach (var product in pro)
-            {
-                table.AddRow(product.Name, product.Price, product.Categories, product.StockNumber, product.Id);
-            }
 
             table.Write();
 
@@ -175,105 +195,121 @@ namespace FinalConsoleProject.Service
         // Sale methods:
         public void AddSale(int listsale, int id, int salenumber)
         {
-            var list = listsale;
 
-            
+            var sale = Product.Find(x => x.Id == id);
 
-            var sale = Product.FirstOrDefault(x => x.Id == id);
+            var sameproductid = SaleItem.Find(x => x.Id.Equals(id));
 
-            if (salenumber > sale.StockNumber)
+            if (sameproductid != null)
             {
-                throw new Exception($"Haven't enough {sale.Name} in stock ");
-            }
-
-            if (salenumber < 0)
-            {
-                Console.WriteLine("Number must be bigger than 0!");
-            }
-
-            if (id < 0)
-            {
-                Console.WriteLine("Id is wrong!");
-            }
-
-            sale.StockNumber -= salenumber;
-
-            if (sale.Id == id)
-            {
-                var newsaleItem = new SaleItem
+                if (sale.StockNumber < salenumber)
                 {
-                    SaleNumber = salenumber,
-
-                    Products = (Products)sale,
-
-
-
-
-
-                };
-                SaleItem.Add(newsaleItem);
-
-
-
-                var newsale = new Sales
-
+                    throw new Exception("error");
+                }
+                sale.StockNumber -= salenumber;
+                
+                foreach (var item in Sale)
                 {
+                    item.Amount += (int)(salenumber * sale.Price);
+                }
+                
+            }
+            else
+            {
+                if (salenumber > sale.StockNumber)
+                {
+                    throw new Exception($"Haven't enough {sale.Name} in stock ");
+                }
+
+                if (salenumber < 0)
+                {
+                    Console.WriteLine("Number must be bigger than 0!");
+                }
+
+                if (id < 0)
+                {
+                    Console.WriteLine("Id is wrong!");
+                }
+
+                sale.StockNumber -= salenumber;
+
+                if (sale.Id == id)
+                {
+                    var newsaleItem = new SaleItem
+                    {
+                        SaleNumber = salenumber,
+
+                        Products = (Products)sale,
+
+                    };
+                    SaleItem.Add(newsaleItem);
+
+                    var newsale = new Sales
+
+                    {
 
 
-                    Amount = (int)(salenumber * newsaleItem.Products.Price),
+                        Amount = (int)(salenumber * newsaleItem.Products.Price),
 
-                    Id = id,
+                        Id = id,
 
-                    Date = DateTime.Now.AddMinutes(1),
+                        Date = DateTime.Now.AddMinutes(1),
 
 
 
-                };
-                Sale.Add(newsale);
+                    };
+                    Sale.Add(newsale);
+                    SaleItem.Clear();
+                    
+                }
 
                 
             }
-   
-            
-        //    var newsaleItem = new SaleItem
-        //    {
-        //        SaleNumber = salenumber,
-
-        //        Products = (Products)sale,
-
-                
 
 
 
-        //};
-        //    SaleItem.Add(newsaleItem);
 
 
 
-        //    var newsale = new Sales
+            //    var newsaleItem = new SaleItem
+            //    {
+            //        SaleNumber = salenumber,
 
-        //    {
-
-
-        //        Amount = (int)(salenumber * newsaleItem.Products.Price),
-
-        //        Id = id,
-
-        //        Date = DateTime.Now.AddMinutes(1),
-                
+            //        Products = (Products)sale,
 
 
-        //};
-        //    Sale.Add(newsale);
 
-        //    return newsale.Id;
+
+
+            //};
+            //    SaleItem.Add(newsaleItem);
+
+
+
+            //    var newsale = new Sales
+
+            //    {
+
+
+            //        Amount = (int)(salenumber * newsaleItem.Products.Price),
+
+            //        Id = id,
+
+            //        Date = DateTime.Now.AddMinutes(1),
+
+
+
+            //};
+            //    Sale.Add(newsale);
+
+            //    return newsale.Id;
 
 
         }
 
         public List<Sales> ShowAllSales()
         {
-            
+
             return Sale;
         }
 
@@ -302,7 +338,7 @@ namespace FinalConsoleProject.Service
         //        }
         //    }
 
-            
+
 
         //    var table = new ConsoleTable("Sale Id", "Product Name", "Sale Amount", "Sale Date");
         //    foreach (var item in sale)
@@ -315,7 +351,7 @@ namespace FinalConsoleProject.Service
         //    }
         //    table.Write();
 
-            
+
         //}
 
         public void DeleteSaleById(int id)
