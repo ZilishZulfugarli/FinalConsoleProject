@@ -207,11 +207,14 @@ namespace FinalConsoleProject.Service
                 {
                     throw new Exception("error");
                 }
+
                 sale.StockNumber -= salenumber;
+
+                sameproductid.SaleNumber += salenumber;
 
                 foreach (var item in Sale)
                 {
-                    item.Amount += (int)(salenumber * sale.Price);
+                    item.Amount += (int)(salenumber * sale.Price); 
                 }
 
             }
@@ -238,6 +241,7 @@ namespace FinalConsoleProject.Service
 
                 if (sale.Id == id)
                 {
+                    
                     var newsaleItem = new SaleItem
                     {
                         SaleNumber = salenumber,
@@ -259,6 +263,13 @@ namespace FinalConsoleProject.Service
                     };
 
                     Sale.Add(newsale);
+
+                    Console.WriteLine(newsale.Id);
+
+                    
+
+                    return;
+
                 }
             }
 
@@ -309,53 +320,53 @@ namespace FinalConsoleProject.Service
             return Sale;
         }
 
-        public void DeleteSaleByName(string name, int reversenumber)
+        public void DeleteSaleByName(int id, string name, int reversenumber)
         {
+
+            var sale = Sale.FirstOrDefault(x => x.Id == id);
+
+
+            if (id != sale.Id)
+            {
+                throw new Exception("Invalid Id number!");
+            }
+
+            if (sale == null)
+            {
+                throw new Exception("Please enter Sale Id");
+            }
+
             var salebyname = Product.FirstOrDefault(x => x.Name == name);
+
+            if (name == null)
+            {
+                Console.WriteLine("Please enter Product's Name or Id");
+            }
 
             if (salebyname == null)
             {
                 Console.WriteLine("Got an error!");
             }
 
-            salebyname.StockNumber += reversenumber;
-
-            
-
             foreach (var item in SaleItem)
             {
-                if (item.Products.Price < 0)
+                if (item.SaleNumber < reversenumber)
                 {
+                    throw new Exception("Error");
                     return;
                 }
-                foreach (var item2 in Sale)
+                else
                 {
-                    
-                    item2.Amount -= (int)item.Products.Price * reversenumber;
-                    item.SaleNumber -= reversenumber;
-
-                    
+                    foreach (var item2 in Sale)
+                    {
+                        item2.Amount -= (int)item.Products.Price * reversenumber;
+                        item.SaleNumber -= reversenumber;
+                    }
                 }
             }
-
-            
+            salebyname.StockNumber += reversenumber;
         }
-
-
-        //    var table = new ConsoleTable("Sale Id", "Product Name", "Sale Amount", "Sale Date");
-        //    foreach (var item in sale)
-        //    {
-        //        foreach (var item2 in Sale)
-        //        {
-        //            table.AddRow(item.Id, item.Name, item2.Amount, item2.Date);
-
-        //        }
-        //    }
-        //    table.Write();
-
-
-        //}
-
+                
         public void DeleteSaleById(int id)
         {
             var deletedsale = Sale.FirstOrDefault(x => x.Id == id);
