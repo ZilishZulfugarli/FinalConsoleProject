@@ -22,8 +22,7 @@ namespace FinalConsoleProject.Service
         public List<Sales> Sale;
 
         public List<SaleItem> SaleItem;
-
-
+               
 
         public MarketService()
         {
@@ -192,71 +191,109 @@ namespace FinalConsoleProject.Service
 
         }
 
+
+
+
         // Sale methods:
-        public void AddSale(int listsale, int id, int salenumber)
+
+
+        public void AddSale(int listnumber)
         {
-
-
-            var sale = Product.Find(x => x.Id == id);
-
-            var sameproductid = SaleItem.Find(x => x.Id.Equals(id));
-
-            if (sameproductid != null)
+            if (listnumber > 0 || listnumber != null)
             {
-                if (sale.StockNumber < salenumber)
-                {
-                    throw new Exception("error");
-                }
 
-                sale.StockNumber -= salenumber;
-
-                sameproductid.SaleNumber += salenumber;
-
-                foreach (var item in Sale)
-                {
-                    item.Amount += (int)(salenumber * sale.Price); 
-                }
-
-            }
-            else
-            {
-                if (salenumber > sale.StockNumber)
-                {
-                    throw new Exception($"Haven't enough {sale.Name} in stock ");
-                }
-
-                if (salenumber < 0)
-                {
-                    Console.WriteLine("Number must be bigger than 0!");
-                }
+                Console.WriteLine("Enter product ID for add sale:");
+                int ID = Convert.ToInt32(Console.ReadLine());
 
 
+                Console.WriteLine("Enter product count:");
+                int count = Convert.ToInt32(Console.ReadLine());
 
-                if (id < 0)
-                {
-                    Console.WriteLine("Id is wrong!");
-                }
+                var list = SaleItem.Find(x => x.Id == ID && x.SaleNumber == count);
+                var list2 = Sale.Find(x => x.SaleList == listnumber);
+                var list3 = Product.Find(x => x.Id == ID);
 
-                sale.StockNumber -= salenumber;
 
-                if (sale.Id == id)
+                if (list == null)
                 {
                     
-                    var newsaleItem = new SaleItem
+                    if (listnumber == null || listnumber < 0)
                     {
-                        SaleNumber = salenumber,
+                        throw new Exception("Please enter list count more than 0!");
+                    }
 
-                        Products = (Products)sale,
+                    if (ID != list3.Id)
+                    {
+                        throw new Exception("Invalid ID!");
+                    }
+
+                    if (count == 0 || count > list3.StockNumber)
+                    {
+                        throw new Exception($"Please enter number more than 0 or less than {list.Products.StockNumber}");
+                    }
+
+                    var newsaleItem2 = new SaleItem
+                    {
+                        SaleNumber = count,
+
+                        Products = (Products)list3,
 
                     };
 
-                    SaleItem.Add(newsaleItem);
+                    SaleItem.Add(newsaleItem2);
+
+                    var newsale2 = new Sales
+                    {
+                        SaleItems = SaleItem,
+
+                        Amount = (int)(count * newsaleItem2.Products.Price),
+
+                        Date = DateTime.Now.AddMinutes(1),
+
+                    };
+
+                    Sale.Add(newsale2);
+
+
+
+                }
+
+                else
+                {
+
+                    list2.Id++;
+                    
+
+                    if (listnumber == null || listnumber < 0)
+                    {
+                        throw new Exception("Please enter list count more than 0!");
+                    }
+
+                    if (ID != list3.Id)
+                    {
+                        throw new Exception("Invalid ID!");
+                    }
+
+                    if (count == 0 || count > list3.StockNumber)
+                    {
+                        throw new Exception($"Please enter number more than 0 or less than {list.Products.StockNumber}");
+                    }
+
+                    var newsaleItem = new SaleItem
+                    {
+                        SaleNumber = count,
+
+                        Products = (Products)list3,
+
+                    };
+
+                    
 
                     var newsale = new Sales
                     {
                         SaleItems = SaleItem,
 
-                        Amount = (int)(salenumber * newsaleItem.Products.Price),
+                        Amount = (int)(count * newsaleItem.Products.Price),
 
                         Date = DateTime.Now.AddMinutes(1),
 
@@ -264,56 +301,13 @@ namespace FinalConsoleProject.Service
 
                     Sale.Add(newsale);
 
+
+
                     Console.WriteLine(newsale.Id);
-
-                    
-
-                    return;
-
                 }
             }
-
-
-
-
-
-
-            //    var newsaleItem = new SaleItem
-            //    {
-            //        SaleNumber = salenumber,
-
-            //        Products = (Products)sale,
-
-
-
-
-
-            //};
-            //    SaleItem.Add(newsaleItem);
-
-
-
-            //    var newsale = new Sales
-
-            //    {
-
-
-            //        Amount = (int)(salenumber * newsaleItem.Products.Price),
-
-            //        Id = id,
-
-            //        Date = DateTime.Now.AddMinutes(1),
-
-
-
-            //};
-            //    Sale.Add(newsale);
-
-            //    return newsale.Id;
-
-
         }
-
+                
         public List<Sales> ShowAllSales()
         {
 
@@ -366,7 +360,7 @@ namespace FinalConsoleProject.Service
             }
             salebyname.StockNumber += reversenumber;
         }
-                
+
         public void DeleteSaleById(int id)
         {
             var deletedsale = Sale.FirstOrDefault(x => x.Id == id);

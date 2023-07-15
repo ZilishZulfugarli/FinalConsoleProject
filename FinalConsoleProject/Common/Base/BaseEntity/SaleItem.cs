@@ -17,7 +17,7 @@ namespace FinalConsoleProject.Common.Base.BaseEntity
             count++;
         }
 
-        private decimal EndPrice = 0;
+        public decimal EndPrice { get; set; }
 
 
         public Products Products { get; set; }

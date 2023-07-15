@@ -11,6 +11,7 @@ using System.Globalization;
 using System.Security.Cryptography.X509Certificates;
 using System.Data;
 using System.ComponentModel.Design;
+using System.Text.RegularExpressions;
 
 namespace FinalConsoleProject.Service
 {
@@ -24,6 +25,11 @@ namespace FinalConsoleProject.Service
             {
                 Console.WriteLine("Enter product's name:");
                 string name = Console.ReadLine().Trim();
+                bool regex = Regex.IsMatch(name, @"^[a-zA-Z]+$");
+                if (regex != true)
+                {
+                    throw new Exception("Please enter only letter");
+                }
 
                 Console.WriteLine("Enter products's price:");
                 decimal price = Convert.ToDecimal(Console.ReadLine().Trim());
@@ -42,6 +48,7 @@ namespace FinalConsoleProject.Service
                 Console.WriteLine("Enter product's category:");
 
                 string category = Console.ReadLine().Trim();
+                
 
                 Console.WriteLine("Enter product's stock number:");
                 int number = Convert.ToInt32(Console.ReadLine().Trim());
@@ -72,6 +79,11 @@ namespace FinalConsoleProject.Service
 
                 Console.WriteLine("Enter product name:");
                 string name = Console.ReadLine().Trim();
+                bool regex = Regex.IsMatch(name, @"^[a-zA-Z]+$");
+                if (regex != true)
+                {
+                    throw new Exception("Please enter only letter");
+                }
 
                 Console.WriteLine("Enter product price:");
                 decimal price = Convert.ToDecimal(Console.ReadLine().Trim());
@@ -148,6 +160,13 @@ namespace FinalConsoleProject.Service
             {
                 Console.WriteLine("Enter category:");
                 string category = Console.ReadLine().Trim();
+                bool regex = Regex.IsMatch(category, @"^[a-zA-Z]+$");
+                if (regex != true)
+                {
+                    
+                    throw new Exception("Please enter only letter");
+                    
+                }
 
                 marketService.ShowProductsByCategory(category);
 
@@ -191,6 +210,13 @@ namespace FinalConsoleProject.Service
             {
                 Console.WriteLine("Enter product name:");
                 string name = Console.ReadLine().Trim();
+                bool regex = Regex.IsMatch(name, @"^[a-zA-Z]+$");
+                if (regex != true)
+                {
+
+                    throw new Exception("Please enter only letter");
+
+                }
 
                 if (string.IsNullOrEmpty(name))
                 {
@@ -208,46 +234,74 @@ namespace FinalConsoleProject.Service
         }
         //----------------------------------------------------------------------------------------------------------------------------
         //Sale methods
+        
         public static void MenuAddSale()
-        {
-
+        { 
             try
             {
-                Console.WriteLine("Please enter products count:");
+                
+                
+                Console.WriteLine("Enter list number:");
                 int listnumber = Convert.ToInt32(Console.ReadLine());
 
+                
+                    
+                        
 
-                for (int i = 1; i <= listnumber; i++)
-                {
-                    Console.WriteLine("Please enter product ID:");
-                    int Id = Convert.ToInt32(Console.ReadLine());
-
-                    Console.WriteLine("Enter product amount:");
-                    int SaleNumber = Convert.ToInt32(Console.ReadLine());
-
-                    marketService.AddSale(listnumber, Id, SaleNumber);
-
-                }
-
-                foreach (var item in marketService.Sale)
-                {
-                    Console.WriteLine($"Added sale with ID -> {item.Id}");
-                }
-
-
-
-
-
+                    
+                    marketService.AddSale(listnumber);
+                
+                
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Got an error!");
+                Console.WriteLine("Oops! Got an error!");
                 Console.WriteLine(ex.Message);
-
             }
 
-
         }
+
+        //public static void MenuAddSale()
+        //{
+
+
+        //    try
+        //    {
+                
+        //        Console.WriteLine("Please enter products count:");
+        //        int listnumber = Convert.ToInt32(Console.ReadLine());
+
+
+               
+
+        //            marketService.AddSale(listnumber);
+
+                
+
+                
+
+        //        foreach (var item in marketService.Sale)
+        //        {
+        //            Console.WriteLine($"Added sale with ID -> {item.Id}");
+        //        }
+                
+
+                
+
+
+
+
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine("Got an error!");
+        //        Console.WriteLine(ex.Message);
+
+        //    }
+
+
+        //}
 
         public static void MenuShowAllSales()
         {
@@ -282,7 +336,7 @@ namespace FinalConsoleProject.Service
                     }
 
                     table.Write();
-
+                    return;
                 }
 
             }
@@ -295,18 +349,19 @@ namespace FinalConsoleProject.Service
             }
 
 
+
         }
 
         public static void MenuDeleteSaleByName()
         {
             try
             {
-                Console.WriteLine("Enter id for search:");
+                Console.WriteLine("Enter Sale ID:");
                 int id = Convert.ToInt32(Console.ReadLine());
 
-                Console.WriteLine("Enter name for search:");
+                Console.WriteLine("Enter Product Name in ID:");
                 string name = Console.ReadLine();
-                                                
+
                 Console.WriteLine("Enter number how much you want reverse:");
                 int reversenumber = Convert.ToInt32(Console.ReadLine());
 

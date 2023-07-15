@@ -22,7 +22,7 @@ namespace FinalConsoleProject.Common.Base.BaseEntity
 
 
 
-        public int Amount { get; set; }
+        public decimal Amount { get; set; }
 
 
         public DateTime Date { get; set; }
@@ -30,6 +30,8 @@ namespace FinalConsoleProject.Common.Base.BaseEntity
         public List<SaleItem> SaleItems;
 
         public int SaleList { get; set; }
+
+       
 
 
     }
