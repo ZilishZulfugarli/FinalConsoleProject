@@ -22,7 +22,7 @@ namespace FinalConsoleProject.Service
         public List<Sales> Sale;
 
         public List<SaleItem> SaleItem;
-               
+
 
         public MarketService()
         {
@@ -85,17 +85,24 @@ namespace FinalConsoleProject.Service
 
 
         }
-        public void UptadeProduct(int id, string name, decimal price, int number)
+        public void UptadeProduct(int id, string name, decimal price, int number, string category)
         {
             var pro = Product.FirstOrDefault(x => x.Id == id);
             if (pro == null)
             { Console.WriteLine("There is not product!"); }
+            bool isSuccelfull = Enum.TryParse(typeof(Categories), category, true, out object parsedCategories);
 
+            if (!isSuccelfull)
+            {
+                throw new FormatException("Category is empty!");
+            }
             pro.Name = name;
 
             pro.Price = price;
 
             pro.StockNumber = number;
+
+            pro.Categories = (Categories)parsedCategories;
 
 
         }
@@ -195,119 +202,182 @@ namespace FinalConsoleProject.Service
 
 
         // Sale methods:
-
-
-        public void AddSale(int listnumber)
+        int Count = 0;
+        public void AddSale()
         {
-            if (listnumber > 0 || listnumber != null)
+            Sales sale = new Sales();
+            sale.Id = Count++;
+            sale.SaleItems = new List<SaleItem>();
+            ConsoleKeyInfo key = default(ConsoleKeyInfo);
+            int i = 1;
+
+            do
             {
+                SaleItem item = new SaleItem();
 
-                Console.WriteLine("Enter product ID for add sale:");
-                int ID = Convert.ToInt32(Console.ReadLine());
-
-
-                Console.WriteLine("Enter product count:");
-                int count = Convert.ToInt32(Console.ReadLine());
-
-                var list = SaleItem.Find(x => x.Id == ID && x.SaleNumber == count);
-                var list2 = Sale.Find(x => x.SaleList == listnumber);
-                var list3 = Product.Find(x => x.Id == ID);
-
-
-                if (list == null)
+                Console.WriteLine("Enter product ID:");
+                int productID = Convert.ToInt32(Console.ReadLine());
+                Products product = Product.Find(x => x.Id == productID);
+                if (product != null)
                 {
-                    
-                    if (listnumber == null || listnumber < 0)
+                    Console.WriteLine("Enter product count:");
+                    string productCount = Console.ReadLine();
+                    int saleitemCount = Convert.ToInt32(productCount);
+
+                    while (saleitemCount == 0)
                     {
-                        throw new Exception("Please enter list count more than 0!");
+                        Console.WriteLine("Product number must bigger than 0!");
+                        productCount = Console.ReadLine();
+                        saleitemCount = Convert.ToInt32(productCount);
                     }
 
-                    if (ID != list3.Id)
+                    item.Id = i;
+                    item.Products = product;
+                    if (product.StockNumber == 0)
                     {
-                        throw new Exception("Invalid ID!");
+                        Console.WriteLine("There is not enough product in stock");
+                        continue;
                     }
-
-                    if (count == 0 || count > list3.StockNumber)
+                    else if (product.StockNumber >= saleitemCount)
                     {
-                        throw new Exception($"Please enter number more than 0 or less than {list.Products.StockNumber}");
+                        item.SaleNumber = saleitemCount;
+                        product.StockNumber -= saleitemCount;
+                        sale.Amount += product.Price * item.SaleNumber;
+                        sale.SaleItems.Add(item);
+                        Console.WriteLine(product.Name);
                     }
-
-                    var newsaleItem2 = new SaleItem
+                    else
                     {
-                        SaleNumber = count,
-
-                        Products = (Products)list3,
-
-                    };
-
-                    SaleItem.Add(newsaleItem2);
-
-                    var newsale2 = new Sales
-                    {
-                        SaleItems = SaleItem,
-
-                        Amount = (int)(count * newsaleItem2.Products.Price),
-
-                        Date = DateTime.Now.AddMinutes(1),
-
-                    };
-
-                    Sale.Add(newsale2);
-
-
-
+                        Console.WriteLine("Error");
+                        Console.WriteLine("Error");
+                        if (Console.ReadKey().Key == ConsoleKey.Enter)
+                        {
+                            item.SaleNumber = product.StockNumber;
+                            product.StockNumber = 0;
+                            i++;
+                            sale.Amount += product.Price * item.SaleNumber;
+                            sale.SaleItems.Add(item);
+                            Console.WriteLine(product.Name);
+                        }
+                        else
+                        {
+                            Console.WriteLine("This product is not sold");
+                        }
+                    }
                 }
-
                 else
                 {
-
-                    list2.Id++;
-                    
-
-                    if (listnumber == null || listnumber < 0)
-                    {
-                        throw new Exception("Please enter list count more than 0!");
-                    }
-
-                    if (ID != list3.Id)
-                    {
-                        throw new Exception("Invalid ID!");
-                    }
-
-                    if (count == 0 || count > list3.StockNumber)
-                    {
-                        throw new Exception($"Please enter number more than 0 or less than {list.Products.StockNumber}");
-                    }
-
-                    var newsaleItem = new SaleItem
-                    {
-                        SaleNumber = count,
-
-                        Products = (Products)list3,
-
-                    };
-
-                    
-
-                    var newsale = new Sales
-                    {
-                        SaleItems = SaleItem,
-
-                        Amount = (int)(count * newsaleItem.Products.Price),
-
-                        Date = DateTime.Now.AddMinutes(1),
-
-                    };
-
-                    Sale.Add(newsale);
-
-
-
-                    Console.WriteLine(newsale.Id);
+                    Console.WriteLine("Product is not available");
+                    continue;
                 }
+                Console.WriteLine("Click the \"Space\" button to stop process and any other button to contiue");
+                key = Console.ReadKey();
             }
+            while (key.Key != ConsoleKey.Spacebar);
+
+            sale.Date = DateTime.Now;
+
+            if (sale.SaleItems.Count > 0)
+            {
+                Sale.Add(sale);
+
+                Console.WriteLine("Sale Added");
+            }
+            else { Console.WriteLine("No sale added!"); }
         }
-                
+
+
+
+        //public int AddSale()
+        //{
+        //    var list = new List<SaleItem>();
+
+        //    try
+        //    {
+        //        var newsale = new Sales
+        //        {
+        //            SaleItems = list,
+        //            Date = DateTime.UtcNow
+        //        };
+
+        //    Again:
+        //        int option;
+        //        int Amount = 0;
+        //        var list2 = Product.Find(x => x.StockNumber == x.StockNumber);
+
+
+
+        //        Console.WriteLine("Please Enter Product's ID:");
+        //        int Id = Convert.ToInt32(Console.ReadLine());
+
+        //        Console.WriteLine("Please Enter Product Count:");
+        //        int Count = Convert.ToInt32(Console.ReadLine());
+
+
+        //        if (Count > list2.StockNumber)
+        //        {
+        //            throw new Exception("There is no enough product in stock");
+        //        }
+        //        if (Count <= 0)
+        //        {
+        //            throw new Exception("Please enter count more than 0!");
+        //        }
+
+        //        var saleitem = new SaleItem
+        //        {
+        //            Products = list2,
+
+        //            SaleNumber = Count
+        //        };
+
+        //        newsale.Amount = Count * saleitem.Products.Price;
+
+        //        SaleItem.Add(saleitem);
+
+        //        list.Add(saleitem);
+
+        //        decimal EndAmount = 0;
+
+        //        for (int i = 0; i < list.Count; i++)
+        //        {
+        //            Amount += list[i].SaleNumber;
+        //        }
+
+        //        list2.StockNumber -= saleitem.SaleNumber;
+
+        //        Console.WriteLine($"If you want to continue to add sale");
+
+        //        Console.WriteLine("1 - Yes");
+        //        Console.WriteLine("2 - No");
+
+        //        int option1 = Convert.ToInt32(Console.ReadLine());
+
+        //        switch (option1)
+        //        {
+        //            case 1:
+        //                goto Again;
+
+        //            case 2:
+        //                goto End;
+
+        //            default:
+        //                break;
+        //        }
+        //    End:
+        //        Sale.Add(newsale);
+        //        return Sale.Count;
+        //    }
+
+        //    catch(Exception ex)
+        //    {
+        //        Console.WriteLine("Error!");
+        //        Console.WriteLine(ex.Message);
+        //    }
+        //    return SaleItem.Count;
+        //}
+
+
+
         public List<Sales> ShowAllSales()
         {
 
@@ -344,18 +414,17 @@ namespace FinalConsoleProject.Service
 
             foreach (var item in SaleItem)
             {
-                if (item.SaleNumber < reversenumber)
-                {
-                    throw new Exception("Error");
-                    return;
-                }
-                else
-                {
+                
+                
                     foreach (var item2 in Sale)
                     {
                         item2.Amount -= (int)item.Products.Price * reversenumber;
                         item.SaleNumber -= reversenumber;
                     }
+                if (item.SaleNumber < reversenumber)
+                {
+                    throw new Exception("Error");
+
                 }
             }
             salebyname.StockNumber += reversenumber;
@@ -368,6 +437,9 @@ namespace FinalConsoleProject.Service
             { throw new Exception($"There is not product for {id} ID "); }
 
             Sale = Sale.Where(x => x.Id != id).ToList();
+            
+
+
         }
 
         public void ShowSaleByDateRange(DateTime date1, DateTime date2)
@@ -397,16 +469,18 @@ namespace FinalConsoleProject.Service
         {
             var pricerange = Sale.FindAll(x => x.Amount > price1 && x.Amount < price2);
 
-            var table = new ConsoleTable("Sale Id", "Product Name", "Sale Amount", "Sale Date");
 
-            foreach (var salebypricerange in pricerange)
-            {
-                foreach (var sale in SaleItem)
-                {
-                    table.AddRow(salebypricerange.Id, sale.Products.Name, salebypricerange.Amount, salebypricerange.Date);
-                }
-            }
-            table.Write();
+
+            //var table = new ConsoleTable("Sale Id", "Product Name", "Sale Amount", "Sale Date");
+
+            //foreach (var salebypricerange in pricerange)
+            //{
+            //    foreach (var sale in SaleItem)
+            //    {
+            //        table.AddRow(salebypricerange.Id, sale.Products.Name, salebypricerange.Amount, salebypricerange.Date);
+            //    }
+            //}
+            //table.Write();
         }
 
         public void ShowSaleByDate(DateTime date)

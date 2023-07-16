@@ -10,12 +10,13 @@ namespace FinalConsoleProject.Common.Base.BaseEntity
 {
     public class Sales : BaseId
     {
-        private static int count;
+        public  int count;
 
         public Sales()
         {
             Id = count;
             count++;
+           
         }
 
 

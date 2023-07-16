@@ -23,6 +23,7 @@ namespace FinalConsoleProject.SubMenu
                 Console.WriteLine("5. Show sale by date range");
                 Console.WriteLine("6. Show sale by date");
                 Console.WriteLine("7. Show sale by ID");
+                Console.WriteLine("8. Show sale by price range");
 
                 Console.WriteLine("0. Go back");
 
@@ -60,7 +61,7 @@ namespace FinalConsoleProject.SubMenu
                         MenuService.MenuShowSaleById();
                         break;
                     case 8:
-                        MenuService.MenuShowSaleById();
+                        MenuService.MenuShowSaleByPriceRange();
                         break;
                     case 0:
                         break;

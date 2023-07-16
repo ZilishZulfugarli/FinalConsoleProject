@@ -8,12 +8,7 @@ using System.Threading.Tasks;
 
 namespace FinalConsoleProject.Common.Base.BaseEntity
 {
-    /*-ad
-  - qiymet
-  - kateqoriyasi (enum)
-  - say
-  - kodu  var
-    */
+    
     public class Products : BaseId
     {
         private static int count;
