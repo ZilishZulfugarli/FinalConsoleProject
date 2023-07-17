@@ -38,21 +38,19 @@ namespace FinalConsoleProject.SubMenu
                 switch (option)
                 {
                     case 1:
-                        MenuService.AddNewProduct();
+                        MenuService.MenuAddNewProduct();
                         break;
                     case 2:
-                        MenuService.UptadeProduct();
+                        MenuService.MenuUptadeProduct();
                         break;
-
                     case 3:
                         MenuService.MenuDeleteProduct();
                         break;
-
                     case 4:
-                        MenuService.ShowProduct();
+                        MenuService.MenuShowAllProduct();
                         break;
                     case 5:
-                        MenuService.FindByCategory();
+                        MenuService.MenuFindByCategory();
                         break;
                     case 6:
                         MenuService.MenuFindByPriceRange();
@@ -60,8 +58,6 @@ namespace FinalConsoleProject.SubMenu
                     case 7:
                         MenuService.MenuFindByName();
                         break;
-
-
                     case 0:
                         break;
                     default:

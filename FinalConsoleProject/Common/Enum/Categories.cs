@@ -11,6 +11,7 @@ namespace FinalConsoleProject.Common.Enum
         drink,
         food,
         bakery,
+        meat,
         cosmetic,
         
 

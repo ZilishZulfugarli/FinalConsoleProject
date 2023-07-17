@@ -32,12 +32,15 @@ namespace FinalConsoleProject
                     case 1:
                         ProductSubMenuHelper.ProductSubMenu();
                        break;
+
                     case 2:
                         SaleSubMenuHelper.SaleSubMenu();
                         break;
+
                     case 0:
                         Console.WriteLine("Bye!");
                         break;
+
                     default:
                         Console.WriteLine("No such option! Please enter option 0-2");
                         break;

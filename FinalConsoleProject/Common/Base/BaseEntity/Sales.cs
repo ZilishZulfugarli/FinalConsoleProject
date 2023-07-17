@@ -10,29 +10,22 @@ namespace FinalConsoleProject.Common.Base.BaseEntity
 {
     public class Sales : BaseId
     {
-        public  int count;
+        private static int count;
 
         public Sales()
         {
             Id = count;
             count++;
-           
+            
+
         }
-
-
-
-
-
         public decimal Amount { get; set; }
-
-
         public DateTime Date { get; set; }
 
         public List<SaleItem> SaleItems;
-
         public int SaleList { get; set; }
 
-       
+
 
 
     }
